@@ -19,3 +19,6 @@ def add_glass(db: Session):
     db.commit()
     db.refresh(cur_tracker)
     return cur_tracker
+
+def get_cur_tracker(db: Session):
+    return db.query(Tracker).order_by(desc(Tracker.id)).first()

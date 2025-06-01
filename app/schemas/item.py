@@ -7,7 +7,7 @@ class DailyTracker(DailyTrackerBase):
     id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class TrackerCreate(DailyTrackerBase):
     pass
