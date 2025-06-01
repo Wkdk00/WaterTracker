@@ -9,16 +9,13 @@ from app.crud import get_trackers, create_new_daily_tracker, add_glass
 router = APIRouter()
 
 @router.get('/traker/', response_model=List[DailyTracker])
-def read(db: Session =  Depends(get_db)):
-    trackers = get_trackers(db=db)
-    return trackers
+def read_trackers(db: Session = Depends(get_db)):
+    return get_trackers(db=db)
 
 @router.post('/traker/', response_model=DailyTracker)
-def create(db: Session =  Depends(get_db)):
-    tracker = create_new_daily_tracker(db=db)
-    return tracker
+def create_tracker(db: Session = Depends(get_db)):
+    return create_new_daily_tracker(db=db)
 
 @router.put('/tracker/', response_model=DailyTracker)
-def update(db: Session = Depends(get_db)):
-    update_tracker = add_glass(db=db)
-    return update_tracker
+def update_tracker(db: Session = Depends(get_db)):
+    return add_glass(db=db)

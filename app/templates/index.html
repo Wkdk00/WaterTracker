@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Water Tracker</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Water Tracker</h1>
+        <div class="counter">
+            <span id="count">0</span> glasses today
+        </div>
+        <button id="add-glass" class="btn">Add Glass</button>
+
+        <div class="history">
+            <h2>History</h2>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('add-glass').addEventListener('click', async () => {
+            const response = await fetch('/tracker/', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            document.getElementById('count').textContent = data.count;
+            updateHistory();
+        });
+
+        async function updateHistory() {
+            const response = await fetch('/traker/');
+            const trackers = await response.json();
+            const list = document.getElementById('history-list');
+            list.innerHTML = trackers.map(t =>
+                `<li>${new Date().toLocaleDateString()}: ${t.count} glasses</li>`
+            ).join('');
+        }
+
+        // Initial load
+        updateHistory();
+    </script>
+</body>
+</html>

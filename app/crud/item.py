@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
-from app.schemas import TrackerCreate
 from app.models import Tracker
 
 def get_trackers(db: Session):
