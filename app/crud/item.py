@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
+from datetime import date
 
+from app.database import get_db
 from app.models import Tracker
 
 def get_trackers(db: Session):
@@ -22,3 +24,15 @@ def add_glass(db: Session):
 
 def get_cur_tracker(db: Session):
     return db.query(Tracker).order_by(desc(Tracker.id)).first()
+
+def check_current_day_tracker(db: Session = None):
+    if db is None:
+        db = next(get_db())
+
+    day_tracker = db.query(Tracker).filter(Tracker.day == date.today()).first()
+    if day_tracker is None:
+        new_day_tracker = Tracker(count=0)
+        db.add(new_day_tracker)
+        db.commit()
+        db.refresh(new_day_tracker)
+    return None

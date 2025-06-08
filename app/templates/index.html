@@ -33,7 +33,7 @@
         });
 
         async function updateHistory() {
-            const response = await fetch('/traker/');
+            const response = await fetch('/tracker/');
             const trackers = await response.json();
             const list = document.getElementById('history-list');
             list.innerHTML = trackers.map(t =>
