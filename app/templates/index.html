@@ -19,30 +19,51 @@
     </div>
 
     <script>
-        document.getElementById('add-glass').addEventListener('click', async () => {
-            const response = await fetch('/tracker/', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+<script>
+    // Получаем токен из localStorage (предполагается, что вы его там сохранили после авторизации)
+    const token = localStorage.getItem('token');
 
-            const data = await response.json();
-            document.getElementById('count').textContent = data.count;
-            updateHistory();
+    document.getElementById('add-glass').addEventListener('click', async () => {
+        const response = await fetch('/tracker/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         });
 
-        async function updateHistory() {
-            const response = await fetch('/tracker/');
-            const trackers = await response.json();
-            const list = document.getElementById('history-list');
-            list.innerHTML = trackers.map(t =>
-                `<li>${new Date().toLocaleDateString()}: ${t.count} glasses</li>`
-            ).join('');
+        if (!response.ok) {
+            window.location.href = '/'; // перенаправляем на главную, если не авторизованы
+            return;
         }
 
-        // Initial load
+        const data = await response.json();
+        document.getElementById('count').textContent = data.count;
         updateHistory();
+    });
+
+    async function updateHistory() {
+        const response = await fetch('/tracker/', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            window.location.href = '/';
+            return;
+        }
+
+        const trackers = await response.json();
+        const list = document.getElementById('history-list');
+        list.innerHTML = trackers.map(t =>
+            `<li>${new Date(t.day).toLocaleDateString()}: ${t.count} glasses</li>`
+        ).join('');
+    }
+
+    // Initial load
+    updateHistory();
+</script>
     </script>
 </body>
 </html>
